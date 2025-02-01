@@ -88,8 +88,7 @@ class Site(models.Model):
     poamount = models.DecimalField(db_column='POAmount', max_digits=10, decimal_places=2)  # Field name made lowercase.
     invoicestatus = models.CharField(db_column='InvoiceStatus', max_length=50)  # Field name made lowercase.
     deadline = models.DateField(db_column='Deadline')  # Field name made lowercase.
-    userid = models.ForeignKey('User', models.DO_NOTHING, db_column='UserID')  # Field name made lowercase.
-    logid = models.ForeignKey(Inventoryissuelog, models.DO_NOTHING, db_column='LogID')  # Field name made lowercase.
+
 
     class Meta:
         managed = False

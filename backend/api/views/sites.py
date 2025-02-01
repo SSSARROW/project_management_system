@@ -4,6 +4,9 @@ from rest_framework.response import Response
 from rest_framework import status
 from api.models import Site
 from api.serializer import SiteSerializer
+import json
+from django.http import JsonResponse
+
 
 @api_view(['GET'])
 def get_sites(request):
@@ -40,3 +43,16 @@ def site_detail(request, pk):
     elif request.method == 'DELETE':
         site.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+      
+# def search_sites(request):
+#     if request.method=='POST':
+
+#         search_str=json.load(request.body).get('searchText')
+
+#         sites = Site.objects.filter(pono__istartswith=search_str,owner=request.user) | Site.objects.filter(
+#             sitename__istartswith=search_str,owner=request.user) | Site.objects.filter(
+#             poamount__istartswith=search_str,owner=request.user)
+        
+#         data=sites.values()
+#         return JsonResponse(list(data),safe=False)

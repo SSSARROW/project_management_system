@@ -10,6 +10,9 @@ from .views.sites_expenses import get_site_expenses, create_site_expense, site_e
 from .views.site_progress import  get_site_progress_updates, create_site_progress_update, site_progress_update_detail
 from .views.login import login
 from .views.signup import signup
+from .views.invoice_generation import invoice_generation
+
+from django.views.decorators.csrf import csrf_exempt
 #
 urlpatterns = [
      # User Endpoints
@@ -46,6 +49,7 @@ urlpatterns = [
     path("sites/", get_sites, name='get_sites'),
     path("sites/create", create_site, name='create_site'),
     path("sites/<int:pk>", site_detail, name='site_detail'),
+    # path("search-sites",csrf_exempt(search_sites, name='search_sites')),
 
     # SiteExpenses Endpoints
     path("site-expenses/", get_site_expenses, name='get_site_expenses'),
@@ -59,4 +63,5 @@ urlpatterns = [
 
     path("login/",login,name='login'),
     path("signup/",signup,name='signup'),
+    path("invoice/",invoice_generation,name='invoice'),
  ]
