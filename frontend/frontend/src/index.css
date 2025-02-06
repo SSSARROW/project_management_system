@@ -1,0 +1,182 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import "tailwindcss";
+
+body {
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+
+.addbutton {
+  padding: 1.3em 3em;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  font-weight: 500;
+  color: #ffffff;
+  background-color: #2b72d6;
+  border: none;
+  border-radius: 30px;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease 0s;
+  cursor: pointer;
+  outline: none;
+}
+
+.addbutton:hover {
+  background-color: #3c59ed;
+  box-shadow: 0px 15px 20px rgba(95, 144, 207, 0.4);
+  color: #fff;
+  transform: translateY(-7px);
+}
+
+.addbutton:active {
+  transform: translateY(-1px);
+}
+
+
+/*CLOSE BUTTON*/
+
+.closebutton {
+  padding: 1.3em 3em;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  font-weight: 500;
+  color: #ffffff;
+  background-color: #737373;
+  border: none;
+  border-radius: 30px;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease 0s;
+  cursor: pointer;
+  outline: none;
+}
+
+.closebutton:hover {
+  background-color: #414143;
+  box-shadow: 0px 15px 20px rgba(190, 198, 207, 0.4);
+  color: #fff;
+  transform: translateY(-7px);
+}
+
+.closebutton:active {
+  transform: translateY(-1px);
+}
+
+/*additembutton*/
+
+.additembutton {
+  padding: 1.3em 3em;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  font-weight: 500;
+  color: #ffffff;
+  background-color: #36d148;
+  border: none;
+  border-radius: 30px;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease 0s;
+  cursor: pointer;
+  outline: none;
+}
+
+.additembutton:hover {
+  background-color: #4ed55e;
+  box-shadow: 0px 15px 20px rgba(28, 138, 56, 0.4);
+  color: #fff;
+  transform: translateY(-7px);
+}
+
+.additembutton:active {
+  transform: translateY(-1px);
+}
+
+/*previewbutton*/
+
+.previewbutton {
+  padding: 1.3em 3em;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  font-weight: 500;
+  color: #ffffff;
+  background-color: #0cb517;
+  border: none;
+  border-radius: 30px;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease 0s;
+  cursor: pointer;
+  outline: none;
+}
+
+.previewbutton:hover {
+  background-color: #ab5540;
+  box-shadow: 0px 15px 20px rgba(141, 95, 49, 0.4);
+  color: #fff;
+  transform: translateY(-7px);
+}
+
+.previewbutton:active {
+  transform: translateY(-1px);
+}
+
+/*showbutton*/
+
+.showbutton {
+  padding: 1.3em 3em;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  font-weight: 500;
+  color: #ffffff;
+  background-color: #820cb5;
+  border: none;
+  border-radius: 30px;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease 0s;
+  cursor: pointer;
+  outline: none;
+}
+
+.showbutton:hover {
+  background-color: #8e65ff;
+  box-shadow: 0px 15px 20px rgba(141, 95, 49, 0.4);
+  color: #fff;
+  transform: translateY(-7px);
+}
+
+.showbutton:active {
+  transform: translateY(-1px);
+}
+
+/*issuebtn*/
+
+.issuebtn {
+  padding: 1.3em 3em;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  font-weight: 500;
+  color: #ffffff;
+  background-color: #e77a2c;
+  border: none;
+  border-radius: 30px;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease 0s;
+  cursor: pointer;
+  outline: none;
+}
+
+.issuebtn:hover {
+  background-color: #ca6915;
+  box-shadow: 0px 15px 20px rgba(141, 95, 49, 0.4);
+  color: #fff;
+  transform: translateY(-7px);
+}
+
+.issuebtn:active {
+  transform: translateY(-1px);
+}
