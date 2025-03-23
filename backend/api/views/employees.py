@@ -4,6 +4,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from api.models import Employee
 from api.serializer import EmployeeSerializer
+from django.shortcuts import render
+from django.db.models import Q
 
 @api_view(['GET'])
 def get_employees(request):
@@ -38,3 +40,16 @@ def employee_detail(request, pk):
     elif request.method == 'DELETE':
         employee.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+def search(request):
+    q=request.GET.get('q')
+
+    print(q)
+
+    if q:
+        results = Employee.objects.filter(Q(name__icontains=q) | Q(designation__icontains=q) | Q(employee_id__icontains=q) ) \
+        .order_by('name')
+    else:
+        results=[]
+
+    return render(request, 'partials/results.html',{"results":results})

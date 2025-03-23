@@ -1,12 +1,12 @@
 from rest_framework import serializers
 from rest_framework.response import Response
-from .models import User, Employee, Expenses, Inventory, Inventoryexpense, Inventoryissuelog, Invoice, Site, SiteExpenses, SiteProgressupdate
+from .models import User, Employee, Expenses, Inventory,  InventoryIssueLog, Invoice, Site, SiteExpenses, SiteProgressUpdate,Customer
 
 # User Serializer
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = '__all__'
+        fields = ['user_id', 'username', 'role', 'created_at']
         extra_kwargs={
             'password':{'write_only':True}
         }
@@ -18,6 +18,10 @@ class UserSerializer(serializers.ModelSerializer):
             instance.save()
             return instance
 
+class CustomerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Customer
+        fields = '__all__'
 
 # Employee Serializer
 class EmployeeSerializer(serializers.ModelSerializer):
@@ -37,16 +41,12 @@ class InventorySerializer(serializers.ModelSerializer):
         model = Inventory
         fields = '__all__'
 
-# Inventory Expense Serializer
-class InventoryExpenseSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Inventoryexpense
-        fields = '__all__'
+
 
 # Inventory Issue Log Serializer
 class InventoryIssueLogSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Inventoryissuelog
+        model = InventoryIssueLog
         fields = '__all__'
 
 # Invoice Serializer
@@ -70,5 +70,5 @@ class SiteExpensesSerializer(serializers.ModelSerializer):
 # Site Progress Update Serializer
 class SiteProgressUpdateSerializer(serializers.ModelSerializer):
     class Meta:
-        model = SiteProgressupdate
+        model = SiteProgressUpdate
         fields = '__all__'

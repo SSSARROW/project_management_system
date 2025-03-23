@@ -4,6 +4,9 @@ from rest_framework.response import Response
 from rest_framework import status
 from api.models import Inventory
 from api.serializer import InventorySerializer
+from django.shortcuts import render
+from django.db.models import Q
+
 
 
 @api_view(['GET'])
@@ -41,3 +44,16 @@ def inventory_item_detail(request, pk):
     elif request.method == 'DELETE':
         item.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+def search(request):
+    q=request.GET.get('q')
+
+    print(q)
+
+    if q:
+        results = Inventory.objects.filter(Q(item_id__icontains=q) | Q(item_name__icontains=q)  ) \
+        .order_by('item_name')
+    else:
+        results=[]
+
+    return render(request, 'partials/results.html',{"results":results})

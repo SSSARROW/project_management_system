@@ -3,14 +3,14 @@ from .views.users import get_users, create_user, user_detail
 from .views.employees import get_employees, create_employee, employee_detail
 from .views.expenses import get_expenses, create_expense, expense_detail
 from .views.inventory import get_inventory, create_inventory_item, inventory_item_detail
-from .views.inventory_expenses import get_inventory_expenses, create_inventory_expense, inventory_expense_detail
 from .views.inventory_issue_log import get_inventory_issue_logs, create_inventory_issue_log, inventory_issue_log_detail
-from .views.sites import get_sites, create_site, site_detail
+from .views.sites import get_sites, create_site, site_detail,search
 from .views.sites_expenses import get_site_expenses, create_site_expense, site_expense_detail
 from .views.site_progress import  get_site_progress_updates, create_site_progress_update, site_progress_update_detail
 from .views.login import login
 from .views.signup import signup
-from .views.invoice_generation import invoice_generation
+
+
 
 from django.views.decorators.csrf import csrf_exempt
 #
@@ -35,10 +35,7 @@ urlpatterns = [
     path("inventory/create", create_inventory_item, name='create_inventory_item'),
     path("inventory/<int:pk>", inventory_item_detail, name='inventory_item_detail'),
 
-    # InventoryExpense Endpoints
-    path("inventory-expenses/", get_inventory_expenses, name='get_inventory_expenses'),
-    path("inventory-expenses/create", create_inventory_expense, name='create_inventory_expense'),
-    path("inventory-expenses/<int:pk>", inventory_expense_detail, name='inventory_expense_detail'),
+  
 
     # InventoryIssueLog Endpoints
     path("inventory-issue-logs/", get_inventory_issue_logs, name='get_inventory_issue_logs'),
@@ -48,7 +45,8 @@ urlpatterns = [
     # Site Endpoints
     path("sites/", get_sites, name='get_sites'),
     path("sites/create", create_site, name='create_site'),
-    path("sites/<int:pk>", site_detail, name='site_detail'),
+    path("sites/<str:pk>", site_detail, name='site_detail'),
+    path("search/",search,name='search_sites'),
     # path("search-sites",csrf_exempt(search_sites, name='search_sites')),
 
     # SiteExpenses Endpoints
@@ -63,5 +61,5 @@ urlpatterns = [
 
     path("login/",login,name='login'),
     path("signup/",signup,name='signup'),
-    path("invoice/",invoice_generation,name='invoice'),
+   
  ]

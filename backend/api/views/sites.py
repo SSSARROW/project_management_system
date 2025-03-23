@@ -6,6 +6,8 @@ from api.models import Site
 from api.serializer import SiteSerializer
 import json
 from django.http import JsonResponse
+from django.shortcuts import render
+from django.db.models import Q
 
 
 @api_view(['GET'])
@@ -56,3 +58,17 @@ def site_detail(request, pk):
         
 #         data=sites.values()
 #         return JsonResponse(list(data),safe=False)
+
+
+def search(request):
+    q=request.GET.get('q')
+
+    print(q)
+
+    if q:
+        results = Site.objects.filter(Q(site_name__icontains=q) | Q(po_no__icontains=q) | Q(po_amount__icontains=q) ) \
+        .order_by('site_name')
+    else:
+        results=[]
+
+    return render(request, 'partials/results.html',{"results":results})

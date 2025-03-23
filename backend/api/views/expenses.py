@@ -4,6 +4,9 @@ from rest_framework.response import Response
 from rest_framework import status
 from api.models import Expenses
 from api.serializer import ExpensesSerializer
+from django.shortcuts import render
+from django.db.models import Q
+
 
 @api_view(['GET'])
 def get_expenses(request):
@@ -38,3 +41,17 @@ def expense_detail(request, pk):
     elif request.method == 'DELETE':
         expense.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+def search(request):
+    q=request.GET.get('q')
+
+    print(q)
+
+    if q:
+        results = Expenses.objects.filter(Q(date__icontains=q) | Q(amount__icontains=q)  ) \
+        .order_by('date')
+    else:
+        results=[]
+
+    return render(request, 'partials/results.html',{"results":results})

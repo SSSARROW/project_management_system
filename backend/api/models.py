@@ -6,26 +6,68 @@
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
-from django.utils.timezone import now
 from django.contrib.auth.models import AbstractUser
+from django.utils.timezone import now
+
 
 class Employee(models.Model):
-    eid = models.IntegerField(db_column='EID', primary_key=True)  # Field name made lowercase.
-    name = models.CharField(db_column='Name', max_length=255)  # Field name made lowercase.
-    position = models.CharField(db_column='Position', max_length=255)  # Field name made lowercase.
-    userid = models.ForeignKey('User', models.DO_NOTHING, db_column='UserID')  # Field name made lowercase.
+    employee_id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=255)
+    designation = models.CharField(max_length=25)
+    dob = models.DateField()
+    email = models.CharField(max_length=50, unique=True)
+    gender = models.CharField(max_length=6)
+    address = models.CharField(max_length=225)
+    join_date = models.DateField()
+    salary = models.DecimalField(max_digits=10, decimal_places=2)
 
     class Meta:
         managed = False
         db_table = 'employee'
 
 
+class Customer(models.Model):
+    customer_id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=255)
+    email = models.EmailField(unique=True)
+    phone = models.CharField(max_length=20, blank=True, null=True)
+    address = models.TextField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'customer'
+
+
+class Site(models.Model):
+    po_no = models.CharField(primary_key=True, max_length=50)
+    site_name = models.CharField(max_length=255)
+    po_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    payment_status = models.CharField(max_length=7)
+    project_status = models.CharField(max_length=9)
+    deadline = models.DateField()
+    customer = models.ForeignKey(Customer, models.SET_NULL, null=True, blank=True, db_column='customer_id')
+
+    class Meta:
+        managed = False
+        db_table = 'site'
+
+
+class EmployeeSite(models.Model):
+    id = models.AutoField(primary_key=True)
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
+    site = models.ForeignKey(Site, on_delete=models.CASCADE, db_column='po_no')
+
+    class Meta:
+        managed = False
+        db_table = 'employee_site'
+
+
 class Expenses(models.Model):
-    expenseid = models.IntegerField(db_column='ExpenseID', primary_key=True)  # Field name made lowercase.
-    date = models.DateField(db_column='Date')  # Field name made lowercase.
-    amount = models.DecimalField(db_column='Amount', max_digits=10, decimal_places=2)  # Field name made lowercase.
-    description = models.TextField(db_column='Description')  # Field name made lowercase.
-    userid = models.ForeignKey('User', models.DO_NOTHING, db_column='UserID')  # Field name made lowercase.
+    expense_id = models.AutoField(primary_key=True)
+    date = models.DateField()
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    description = models.TextField()
+    category = models.CharField(max_length=9)
 
     class Meta:
         managed = False
@@ -33,99 +75,99 @@ class Expenses(models.Model):
 
 
 class Inventory(models.Model):
-    itemid = models.IntegerField(db_column='ItemID', primary_key=True)  # Field name made lowercase.
-    itemname = models.CharField(db_column='ItemName', max_length=255)  # Field name made lowercase.
-    itemquantity = models.IntegerField(db_column='ItemQuantity')  # Field name made lowercase.
-    minimumstocklevel = models.IntegerField(db_column='MinimumStockLevel')  # Field name made lowercase.
-    userid = models.ForeignKey('User', models.DO_NOTHING, db_column='UserID')  # Field name made lowercase.
+    item_id = models.AutoField(primary_key=True)
+    item_name = models.CharField(max_length=255)
+    item_quantity = models.IntegerField()
+    minimum_stock_level = models.IntegerField()
+    status = models.CharField(max_length=19)
+    updated_at = models.DateTimeField(blank=True, null=True)
 
     class Meta:
         managed = False
         db_table = 'inventory'
 
 
-class Inventoryexpense(models.Model):
-    inventoryexpenseid = models.IntegerField(db_column='inventoryExpenseID', primary_key=True)  # Field name made lowercase.
-    date = models.DateField(db_column='Date')  # Field name made lowercase.
-    amount = models.DecimalField(db_column='Amount', max_digits=10, decimal_places=2)  # Field name made lowercase.
-    description = models.TextField(db_column='Description', blank=True, null=True)  # Field name made lowercase.
-    userid = models.ForeignKey('User', models.DO_NOTHING, db_column='UserID')  # Field name made lowercase.
-    itemid = models.ForeignKey(Inventory, models.DO_NOTHING, db_column='ItemID')  # Field name made lowercase.
-    expenseid = models.ForeignKey(Expenses, models.DO_NOTHING, db_column='ExpenseID')  # Field name made lowercase.
+class InventoryIssueLog(models.Model):
+    log_id = models.AutoField(primary_key=True)
+    item_quantity = models.IntegerField()
+    description = models.TextField(blank=True, null=True)
+    item = models.ForeignKey(Inventory, models.DO_NOTHING)
 
     class Meta:
         managed = False
-        db_table = 'inventoryexpense'
-
-
-class Inventoryissuelog(models.Model):
-    logid = models.IntegerField(db_column='LogID', primary_key=True)  # Field name made lowercase.
-    itemquantity = models.IntegerField(db_column='ItemQuantity')  # Field name made lowercase.
-    description = models.TextField(db_column='Description', blank=True, null=True)  # Field name made lowercase.
-    itemid = models.ForeignKey(Inventory, models.DO_NOTHING, db_column='ItemID')  # Field name made lowercase.
-    userid = models.ForeignKey('User', models.DO_NOTHING, db_column='UserID')  # Field name made lowercase.
-
-    class Meta:
-        managed = False
-        db_table = 'inventoryissuelog'
-
-
-class Invoice(models.Model):
-    invoiceid = models.IntegerField(db_column='InvoiceID', primary_key=True)  # Field name made lowercase.
-    percentage = models.DecimalField(db_column='Percentage', max_digits=5, decimal_places=2)  # Field name made lowercase.
-    amount = models.DecimalField(max_digits=10, decimal_places=2)
-    pono = models.ForeignKey('Site', models.DO_NOTHING, db_column='pono')
-    userid = models.ForeignKey('User', models.DO_NOTHING, db_column='UserID')  # Field name made lowercase.
-
-    class Meta:
-        managed = False
-        db_table = 'invoice'
-
-
-class Site(models.Model):
-    pono = models.CharField(primary_key=True, max_length=50)
-    sitename = models.CharField(db_column='SiteName', max_length=255)  # Field name made lowercase.
-    poamount = models.DecimalField(db_column='POAmount', max_digits=10, decimal_places=2)  # Field name made lowercase.
-    invoicestatus = models.CharField(db_column='InvoiceStatus', max_length=50)  # Field name made lowercase.
-    deadline = models.DateField(db_column='Deadline')  # Field name made lowercase.
-
-
-    class Meta:
-        managed = False
-        db_table = 'site'
+        db_table = 'inventory_issue_log'
 
 
 class SiteExpenses(models.Model):
-    site_expenseid = models.IntegerField(db_column='site_ExpenseID', primary_key=True)  # Field name made lowercase.
-    date = models.DateField(db_column='Date')  # Field name made lowercase.
-    amount = models.DecimalField(db_column='Amount', max_digits=10, decimal_places=2)  # Field name made lowercase.
-    description = models.TextField(db_column='Description')  # Field name made lowercase.
-    userid = models.ForeignKey('User', models.DO_NOTHING, db_column='UserID')  # Field name made lowercase.
-    pono = models.ForeignKey(Site, models.DO_NOTHING, db_column='pono')
-    expenseid = models.ForeignKey(Expenses, models.DO_NOTHING, db_column='ExpenseID')  # Field name made lowercase.
+    site_expense_id = models.AutoField(primary_key=True)
+    date = models.DateField()
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    description = models.TextField()
+    expense = models.ForeignKey(Expenses, models.DO_NOTHING)
+    site = models.ForeignKey(Site, models.DO_NOTHING, db_column='po_no')
 
     class Meta:
         managed = False
         db_table = 'site_expenses'
 
 
-class SiteProgressupdate(models.Model):
-    progressid = models.IntegerField(db_column='ProgressID', primary_key=True)  # Field name made lowercase.
-    date = models.DateField(db_column='Date')  # Field name made lowercase.
-    progressstatus = models.CharField(db_column='ProgressStatus', max_length=50)  # Field name made lowercase.
-    userid = models.ForeignKey('User', models.DO_NOTHING, db_column='UserID')  # Field name made lowercase.
-    pono = models.ForeignKey(Site, models.DO_NOTHING, db_column='pono')
+class SiteProgressUpdate(models.Model):
+    progress_id = models.AutoField(primary_key=True)
+    date = models.DateField()
+    progress_details = models.TextField()
+    site = models.ForeignKey(Site, models.DO_NOTHING, db_column='po_no')
 
     class Meta:
         managed = False
-        db_table = 'site_progressupdate'
+        db_table = 'site_progress_update'
+        unique_together = (('date', 'site'),)
 
 
 class User(AbstractUser):
-    userid = models.AutoField(db_column='id', primary_key=True)  # Field name made lowercase.
-    username = models.CharField(db_column='username', max_length=255,unique=True)  # Field name made lowercase.
-    password = models.CharField(db_column='password', max_length=255)  # Field name made lowercase.
-    
+    user_id = models.AutoField(primary_key=True)
+    username = models.CharField(max_length=150, unique=True)
+    email = models.EmailField(unique=True)
+    password = models.CharField(max_length=255)
+    role = models.CharField(max_length=25, choices=[
+        ('admin', 'Admin'),
+        ('manager', 'Manager'),
+        ('employee', 'Employee')
+    ])
+
+    class Meta:
+        managed = True
+        db_table = 'users'
+
+    def save(self, *args, **kwargs):
+        if not self.pk and not self.password.startswith(('pbkdf2_sha256$', 'bcrypt$', 'argon2')):  # Prevent double hashing
+            self.set_password(self.password)
+        super().save(*args, **kwargs)
+
+
+class Invoice(models.Model):
+    invoice_id = models.AutoField(primary_key=True)
+    invoice_no = models.IntegerField()
+    date = models.DateField()
+    site = models.ForeignKey(Site, models.DO_NOTHING, db_column='site_name')
+    sdn_no = models.CharField(max_length=50)
+    address = models.TextField()
+    percentage = models.DecimalField(max_digits=10, decimal_places=2)
+    total = models.DecimalField(max_digits=10, decimal_places=2)
+
     class Meta:
         managed = False
-        db_table = 'auth_user'
+        db_table = 'invoice'
+
+
+class InvoiceItems(models.Model):
+    invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE)
+    item_no = models.IntegerField()
+    item_name = models.CharField(max_length=255)
+    quantity = models.IntegerField()
+    unit_price = models.DecimalField(max_digits=10, decimal_places=2)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+
+    class Meta:
+        managed = False
+        db_table = 'invoice_items'
+

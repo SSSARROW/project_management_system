@@ -2,12 +2,14 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from api.models import SiteProgressupdate
+from api.models import SiteProgressUpdate
 from api.serializer import SiteProgressUpdateSerializer
+from django.shortcuts import render
+from django.db.models import Q
 
 @api_view(['GET'])
 def get_site_progress_updates(request):
-    updates = SiteProgressupdate.objects.all()
+    updates = SiteProgressUpdate.objects.all()
     serializer = SiteProgressUpdateSerializer(updates, many=True)
     return Response(serializer.data)
 
@@ -24,8 +26,8 @@ def create_site_progress_update(request):
 @api_view(['GET', 'PUT', 'DELETE'])
 def site_progress_update_detail(request, pk):
     try:
-        update = SiteProgressupdate.objects.get(pk=pk)
-    except SiteProgressupdate.DoesNotExist:
+        update = SiteProgressUpdate.objects.get(pk=pk)
+    except SiteProgressUpdate.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
@@ -40,5 +42,18 @@ def site_progress_update_detail(request, pk):
     elif request.method == 'DELETE':
         update.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+def search(request):
+    q=request.GET.get('q')
+
+    print(q)
+
+    if q:
+        results = SiteProgressUpdate.objects.filter(Q(progress_id__icontains=q) | Q(date__icontains=q)  ) \
+        .order_by('date')
+    else:
+        results=[]
+
+    return render(request, 'partials/results.html',{"results":results})
 
 

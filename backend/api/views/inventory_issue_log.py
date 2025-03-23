@@ -2,12 +2,12 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from api.models import Inventoryissuelog
+from api.models import InventoryIssueLog
 from api.serializer import InventoryIssueLogSerializer
 
 @api_view(['GET'])
 def get_inventory_issue_logs(request):
-    logs = Inventoryissuelog.objects.all()
+    logs = InventoryIssueLog.objects.all()
     serializer = InventoryIssueLogSerializer(logs, many=True)
     return Response(serializer.data)
 
@@ -24,8 +24,8 @@ def create_inventory_issue_log(request):
 @api_view(['GET', 'PUT', 'DELETE'])
 def inventory_issue_log_detail(request, pk):
     try:
-        log = Inventoryissuelog.objects.get(pk=pk)
-    except Inventoryissuelog.DoesNotExist:
+        log = InventoryIssueLog.objects.get(pk=pk)
+    except InventoryIssueLog.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
