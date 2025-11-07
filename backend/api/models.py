@@ -3,7 +3,7 @@
 #   * Rearrange models' order
 #   * Make sure each model has one field with primary_key=True
 #   * Make sure each ForeignKey and OneToOneField has `on_delete` set to the desired behavior
-#   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
+#   * Remove `managed = True` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
 from django.contrib.auth.models import AbstractUser
@@ -22,7 +22,7 @@ class Employee(models.Model):
     salary = models.DecimalField(max_digits=10, decimal_places=2)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'employee'
 
 
@@ -34,7 +34,7 @@ class Customer(models.Model):
     address = models.TextField(blank=True, null=True)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'customer'
 
 
@@ -48,7 +48,7 @@ class Site(models.Model):
     customer = models.ForeignKey(Customer, models.SET_NULL, null=True, blank=True, db_column='customer_id')
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'site'
 
 
@@ -58,7 +58,7 @@ class EmployeeSite(models.Model):
     site = models.ForeignKey(Site, on_delete=models.CASCADE, db_column='po_no')
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'employee_site'
 
 
@@ -70,7 +70,7 @@ class Expenses(models.Model):
     category = models.CharField(max_length=9)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'expenses'
 
 
@@ -83,7 +83,7 @@ class Inventory(models.Model):
     updated_at = models.DateTimeField(blank=True, null=True)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'inventory'
 
 
@@ -94,7 +94,7 @@ class InventoryIssueLog(models.Model):
     item = models.ForeignKey(Inventory, models.DO_NOTHING)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'inventory_issue_log'
 
 
@@ -107,7 +107,7 @@ class SiteExpenses(models.Model):
     site = models.ForeignKey(Site, models.DO_NOTHING, db_column='po_no')
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'site_expenses'
 
 
@@ -118,7 +118,7 @@ class SiteProgressUpdate(models.Model):
     site = models.ForeignKey(Site, models.DO_NOTHING, db_column='po_no')
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'site_progress_update'
         unique_together = (('date', 'site'),)
 
@@ -155,7 +155,7 @@ class Invoice(models.Model):
     total = models.DecimalField(max_digits=10, decimal_places=2)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'invoice'
 
 
@@ -168,6 +168,6 @@ class InvoiceItems(models.Model):
     amount = models.DecimalField(max_digits=10, decimal_places=2)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'invoice_items'
 

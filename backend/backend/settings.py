@@ -13,8 +13,13 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
+from urllib.parse import urlparse, parse_qsl
+from dotenv import load_dotenv
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# load environment variables from .env (if present)
+load_dotenv()
 
 
 # Quick-start development settings - unsuitable for production
@@ -88,20 +93,53 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
+# Read DATABASE_URL from environment, handle quoted values, and coerce bytes -> str
+_db_url = os.getenv("DATABASE_URL", "")
+if _db_url:
+    # strip surrounding quotes that may exist in .env
+    _db_url = _db_url.strip().strip('\"\'')
+    tmpPostgres = urlparse(_db_url)
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'ssgroup',
-        'USER': 'root',
-        'PASSWORD': '',
-        'HOST': 'localhost',
-        'CONN_MAX_AGE': 3600,
-        'OPTIONS': {
-            'sql_mode': 'STRICT_TRANS_TABLES',
+    def _to_str(val):
+        if isinstance(val, (bytes, bytearray)):
+            return val.decode('utf-8')
+        return val
+
+    db_name = _to_str(tmpPostgres.path).lstrip('/') if tmpPostgres.path else ''
+    db_user = _to_str(tmpPostgres.username) if tmpPostgres.username else ''
+    db_password = _to_str(tmpPostgres.password) if tmpPostgres.password else ''
+    db_host = _to_str(tmpPostgres.hostname) if tmpPostgres.hostname else ''
+    db_port = _to_str(tmpPostgres.port) if tmpPostgres.port else ''
+    # parse_qsl expects a string query; coerce if needed
+    query = tmpPostgres.query
+    if isinstance(query, (bytes, bytearray)):
+        query = query.decode('utf-8')
+    db_options = dict(parse_qsl(query)) if query else {}
+
+    try:
+        db_port = int(db_port) if db_port else 5432
+    except ValueError:
+        db_port = 5432
+
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': db_name,
+            'USER': db_user,
+            'PASSWORD': db_password,
+            'HOST': db_host,
+            'PORT': db_port,
+            'OPTIONS': db_options,
         }
     }
-}
+else:
+    # Fallback to sqlite for local development if no DATABASE_URL provided
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
+    }
 
 
 # Password validation
