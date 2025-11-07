@@ -29,9 +29,9 @@ load_dotenv()
 SECRET_KEY = 'django-insecure-^ze$v26lo217(w0vs-a9*3uzj%24$$r05(_)_z=m20dr^!xi47'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['project-management-system-61e5.onrender.com','localhost']
 
 
 # Application definition
@@ -57,6 +57,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
 ]
 
 
